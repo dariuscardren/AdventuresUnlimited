@@ -107,32 +107,40 @@ The next block is for tintin++ to configure. It's complex with if statements so 
 ## Chat Logging
 You can log your chat to a separate file like this:
 ```
-/* communication logger */
-#action {[\s?\s]}{
+#nop /* communication logger */
+#action {[\s?\s]%1}{
   #format {ts}{%t}{%a %H:%M};
   #line log au.communications {<178>$ts \};
-  #line log au.communications;
+  #line log au.communications %0;
   #line gag;
 }
-#action {^[{IC|Auction|Music|Question|Answer|OOC|Grats|TOT|Newbie|WAR|Clan}]}{
+#action {^[{IC|Auction|Music|Question|Answer|OOC|Grats|TOT|Newbie|WAR|Clan}] %1}{
   #format {ts}{%t}{%a %H:%M};
   #line log au.communications {<178>$ts \};
-  #line log au.communications;
+  #line log au.communications %0;
   #line gag;
 }
-#action {OOCly }{
+#action {OOCly %1}{
   #format {ts}{%t}{%a %H:%M};
   #line log au.communications {<178>$ts \};
-  #line log au.communications;
+  #line log au.communications %0;
   #line gag;
 }
 #action {[AFK] mode removed!!!!}{ #line gag; }
 #action {You tell your group: '%1'}{
   #format {ts}{%t}{%a %H:%M};
   #line log au.communications {<178>$ts \};
-  #line log au.communications;
+  #line log au.communications %0;
   #line gag;
 }
+#action {%1 tells the group: '%2'}
+{
+   #format {ts}{%t}{%a %H:%M};
+   #line log au.communications {$ses <178>$ts \};
+   #line log au.communications {%0};
+   #line gag;
+}
+
 ```
 Then in another pane in tmux you can just tail your chat to keep it separate:
 ```
